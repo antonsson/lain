@@ -65,17 +65,20 @@ local function worker(args)
         local now_r = helpers.first_line('/sys/class/net/' .. iface ..
                                            '/statistics/rx_bytes') or 0
 
-        if now_t ~= helpers.get_map("net_t")
-           or now_r ~= helpers.get_map("net_r") then
+        local last_t = helpers.get_map("net_t")
+        local last_r = helpers.get_map("net_r")
+
+        if now_t ~= last_t or now_r ~= last_r
+        then
             net_now.carrier = helpers.first_line('/sys/class/net/' .. iface ..
                                            '/carrier') or "0"
             net_now.state = helpers.first_line('/sys/class/net/' .. iface ..
                                            '/operstate') or "down"
 
-            net_now.sent = (now_t - net.last_t) / timeout / units
+            net_now.sent = (now_t - last_t) / timeout / units
             net_now.sent = string.gsub(string.format('%.1f', net_now.sent), ",", ".")
 
-            net_now.received = (now_r - net.last_r) / timeout / units
+            net_now.received = (now_r - last_r) / timeout / units
             net_now.received = string.gsub(string.format('%.1f', net_now.received), ",", ".")
 
             widget = net.widget
