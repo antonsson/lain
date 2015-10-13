@@ -129,7 +129,7 @@ local function worker(args)
         local volu, mute = string.match(mixer, "([%d]+)%%.*%[([%l]*)")
 
         volu = tonumber(volu) or 0
-        if mute == "" then mute = "off"
+        if mute == "" then mute = "off" end
 
         if alsabar._current_level ~= volu or alsabar._status ~= mute then
 
